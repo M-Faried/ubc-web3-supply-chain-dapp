@@ -86,28 +86,6 @@ contract LemonadeStand {
         });
     }
 
-    function buyItem(uint256 sku)
-        public
-        payable
-        forSale(sku)
-        paidEnough(items[sku].price)
-    {
-        address buyer = msg.sender;
-        uint256 price = items[sku].price;
-
-        // Update Buyer
-        items[sku].buyer = buyer;
-
-        // Update State
-        items[sku].state = State.Sold;
-
-        // Transfer money to seller
-        items[sku].seller.transfer(price);
-
-        // Emit the appropriate event
-        emit Sold(sku);
-    }
-
     function fetchItem(uint256 _sku)
         public
         view
