@@ -41,10 +41,12 @@ contract ConsumerRole {
     // Define an internal function '_addConsumer' to add this role, called by 'addConsumer'
     function _addConsumer(address account) internal {
         Roles.add(consumers, account);
+        emit ConsumerAdded(account);
     }
 
     // Define an internal function '_removeConsumer' to remove this role, called by 'removeConsumer'
     function _removeConsumer(address account) internal {
         Roles.remove(consumers, account);
+        emit consumerRemoved(account);
     }
 }
