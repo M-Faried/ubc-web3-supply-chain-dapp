@@ -84,7 +84,8 @@ contract SupplyChain {
         _;
         uint256 _price = items[_upc].productPrice;
         uint256 amountToReturn = msg.value - _price;
-        items[_upc].consumerID.transfer(amountToReturn);
+        address payable user = address(uint160(items[_upc].consumerID));
+        user.transfer(amountToReturn);
     }
 
     // Define a modifier that checks if an item.state of a upc is Harvested
@@ -140,7 +141,8 @@ contract SupplyChain {
     // Define a function 'kill' if required
     function kill() public {
         if (msg.sender == owner) {
-            selfdestruct(owner);
+            address payable user = address(uint160(owner));
+            selfdestruct(user);
         }
     }
 
@@ -148,11 +150,11 @@ contract SupplyChain {
     function harvestItem(
         uint256 _upc,
         address _originFarmerID,
-        string _originFarmName,
-        string _originFarmInformation,
-        string _originFarmLatitude,
-        string _originFarmLongitude,
-        string _productNotes
+        string memory _originFarmName,
+        string memory _originFarmInformation,
+        string memory _originFarmLatitude,
+        string memory _originFarmLongitude,
+        string memory _productNotes
     ) public {
         // Add the new item as part of Harvest
 
@@ -261,10 +263,10 @@ contract SupplyChain {
             uint256 itemUPC,
             address ownerID,
             address originFarmerID,
-            string originFarmName,
-            string originFarmInformation,
-            string originFarmLatitude,
-            string originFarmLongitude
+            string memory originFarmName,
+            string memory originFarmInformation,
+            string memory originFarmLatitude,
+            string memory originFarmLongitude
         )
     {
         // Assign values to the 8 parameters
@@ -289,7 +291,7 @@ contract SupplyChain {
             uint256 itemSKU,
             uint256 itemUPC,
             uint256 productID,
-            string productNotes,
+            string memory productNotes,
             uint256 productPrice,
             uint256 itemState,
             address distributorID,
