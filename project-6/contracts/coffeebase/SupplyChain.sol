@@ -79,7 +79,10 @@ contract SupplyChain is
 
     // Define a modifer that verifies the Caller
     modifier verifyCaller(address _address) {
-        require(msg.sender == _address);
+        require(
+            msg.sender == _address,
+            "The caller is not the currently the owner of the item."
+        );
         _;
     }
 
@@ -94,13 +97,15 @@ contract SupplyChain is
         _;
         uint256 _price = items[_upc].productPrice;
         uint256 amountToReturn = msg.value - _price;
-        address payable user = address(uint160(items[_upc].consumerID));
-        user.transfer(amountToReturn);
+        items[_upc].consumerID.transfer(amountToReturn);
     }
 
     // Define a modifier that checks if an item.state of a upc is Harvested
     modifier harvested(uint256 _upc) {
-        require(items[_upc].itemState == State.Harvested);
+        require(
+            items[_upc].itemState == State.Harvested,
+            "The is not yet harvested"
+        );
         _;
     }
 
@@ -158,8 +163,7 @@ contract SupplyChain is
     // Define a function 'kill' if required
     function kill() public {
         if (msg.sender == owner) {
-            address payable user = address(uint160(owner));
-            selfdestruct(user);
+            selfdestruct(owner);
         }
     }
 
@@ -175,8 +179,10 @@ contract SupplyChain is
     ) public onlyFarmer {
         // Add the new item as part of Harvest
         Item memory currItem;
+        currItem.sku = sku;
+        currItem.productID = sku + upc;
         currItem.upc = _upc;
-        currItem.ownerID = msg.sender;
+        currItem.ownerID = _originFarmerID;
         currItem.originFarmerID = _originFarmerID;
         currItem.originFarmName = _originFarmName;
         currItem.originFarmInformation = _originFarmInformation;
@@ -203,6 +209,10 @@ contract SupplyChain is
         // Call modifier to verify the caller is a farmer
         onlyFarmer
     {
+        require(
+            items[_upc].itemState == State.Harvested,
+            "The item is not yet harvested."
+        );
         // Update the appropriate fields
         items[_upc].itemState = State.Processed;
         // Emit the appropriate event
@@ -260,8 +270,7 @@ contract SupplyChain is
         items[_upc].distributorID = msg.sender;
         items[_upc].ownerID = msg.sender;
         // Transfer money to farmer
-        address payable user = address(uint160(items[_upc].originFarmerID));
-        user.transfer(msg.value);
+        items[_upc].originFarmerID.transfer(msg.value);
         // emit the appropriate event
         emit Sold(_upc);
     }
