@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.24;
 
 // Import the library 'Roles'
 import "./Roles.sol";
@@ -10,27 +10,41 @@ contract ConsumerRole {
     event consumerRemoved(address removedConsumer);
 
     // Define a struct 'consumers' by inheriting from 'Roles' library, struct Role
+    Roles.Role consumers;
 
     // In the constructor make the address that deploys this contract the 1st consumer
-    constructor() public {}
+    constructor() public {
+        Roles.add(consumers, msg.sender);
+    }
 
     // Define a modifier that checks to see if msg.sender has the appropriate role
     modifier onlyConsumer() {
+        require(Roles.has(consumers, msg.sender));
         _;
     }
 
     // Define a function 'isConsumer' to check this role
-    function isConsumer(address account) public view returns (bool) {}
+    function isConsumer(address account) public view returns (bool) {
+        return Roles.has(consumers, account);
+    }
 
     // Define a function 'addConsumer' that adds this role
-    function addConsumer(address account) public onlyConsumer {}
+    function addConsumer(address account) public onlyConsumer {
+        _addConsumer(account);
+    }
 
     // Define a function 'renounceConsumer' to renounce this role
-    function renounceConsumer() public {}
+    function renounceConsumer() public {
+        _removeConsumer(msg.sender);
+    }
 
     // Define an internal function '_addConsumer' to add this role, called by 'addConsumer'
-    function _addConsumer(address account) internal {}
+    function _addConsumer(address account) internal {
+        Roles.add(consumers, account);
+    }
 
     // Define an internal function '_removeConsumer' to remove this role, called by 'removeConsumer'
-    function _removeConsumer(address account) internal {}
+    function _removeConsumer(address account) internal {
+        Roles.remove(consumers, account);
+    }
 }
