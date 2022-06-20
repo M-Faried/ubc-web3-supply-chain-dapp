@@ -88,7 +88,7 @@ contract SupplyChain is
 
     // Define a modifier that checks if the paid amount is sufficient to cover the price
     modifier paidEnough(uint256 _price) {
-        require(msg.value >= _price);
+        require(msg.value >= _price, "Insufficient value to buy funds");
         _;
     }
 
@@ -226,6 +226,7 @@ contract SupplyChain is
         processed(_upc)
         // Call modifier to verify caller of this function
         verifyCaller(items[_upc].ownerID)
+        // Only farmer should be able to call this function.
         onlyFarmer
     {
         // Update the appropriate fields
