@@ -94,8 +94,6 @@ contract('SupplyChain', function (accounts) {
         //     eventEmitted = true
         // })
 
-        // Adding item.
-        await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes);
         // Mark an item as Processed by calling function processtItem()
         await supplyChain.processItem(upc, { from: originFarmerID });
 
@@ -112,63 +110,79 @@ contract('SupplyChain', function (accounts) {
 
     // 3rd Test
     it("Testing smart contract function packItem() that allows a farmer to pack coffee", async () => {
-        // const supplyChain = await SupplyChain.deployed()
+        const supplyChain = await SupplyChain.deployed()
 
-        // Declare and Initialize a variable for event
-
-
-        // Watch the emitted event Packed()
-
+        //// Declare and Initialize a variable for event
+        // var eventEmitted = false
+        //// Watch the emitted event Packed()
+        // let event = supplyChain.Packed();
+        // await event.watch((err, res) => {
+        //     eventEmitted = true
+        // })
 
         // Mark an item as Packed by calling function packItem()
-
+        await supplyChain.packItem(upc, { from: originFarmerID });
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-
+        const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-
+        assert.equal(resultBufferOne.ownerID, originFarmerID, 'Error: Missing or Invalid ownerID')
+        assert.equal(resultBufferTwo.itemState, 2, 'Error: Invalid item State')
     })
 
     // 4th Test
     it("Testing smart contract function sellItem() that allows a farmer to sell coffee", async () => {
-        // const supplyChain = await SupplyChain.deployed()        
+        const supplyChain = await SupplyChain.deployed()
 
-        // Declare and Initialize a variable for event
-
-
-        // Watch the emitted event ForSale()
-
+        //// Declare and Initialize a variable for event
+        // var eventEmitted = false
+        //// Watch the emitted event ForSale()
+        // let event = supplyChain.ForSale();
+        // await event.watch((err, res) => {
+        //     eventEmitted = true
+        // })
 
         // Mark an item as ForSale by calling function sellItem()
-
+        await supplyChain.sellItem(upc, productPrice, { from: originFarmerID });
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-
+        const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-
+        assert.equal(resultBufferOne.ownerID, originFarmerID, 'Error: Missing or Invalid ownerID')
+        assert.equal(resultBufferTwo.itemState, 3, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly");
+        // assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 5th Test
     it("Testing smart contract function buyItem() that allows a distributor to buy coffee", async () => {
-        // const supplyChain = await SupplyChain.deployed()        
+        const supplyChain = await SupplyChain.deployed()
 
-        // Declare and Initialize a variable for event
-
-
-        // Watch the emitted event Sold()
-        // var event = supplyChain.Sold()
-
+        //// Declare and Initialize a variable for event
+        // var eventEmitted = false
+        //// Watch the emitted event Sold()
+        // let event = supplyChain.Sold();
+        // await event.watch((err, res) => {
+        //     eventEmitted = true
+        // })
 
         // Mark an item as Sold by calling function buyItem()
+        await supplyChain.buyItem(upc, { from: distributorID, value: productPrice });
 
-
-        // Retrieve the just now saved item from blockchain by calling function fetchItem()
-
+        // Retrieve the just now saved item from blockchain by calling function fetchItem()        
+        const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-
+        assert.equal(resultBufferOne.ownerID, distributorID, 'Error: Missing or Invalid ownerID')
+        assert.equal(resultBufferTwo.distributorID, distributorID, "Error: The distributor ID is not set correctly");
+        assert.equal(resultBufferTwo.itemState, 4, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly");
+        // assert.equal(eventEmitted, true, 'Invalid event emitted')        
     })
 
     // 6th Test
