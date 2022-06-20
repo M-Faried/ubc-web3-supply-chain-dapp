@@ -21,7 +21,10 @@ contract FarmerRole {
 
     // Define a modifier that checks to see if msg.sender has the appropriate role
     modifier onlyFarmer() {
-        require(isFarmer(msg.sender));
+        require(
+            isFarmer(msg.sender),
+            "The user is not registered as a farmer."
+        );
         _;
     }
 
@@ -31,12 +34,12 @@ contract FarmerRole {
     }
 
     // Define a function 'addFarmer' that adds this role
-    function addFarmer(address account) public onlyFarmer {
+    function addFarmer(address account) public {
         _addFarmer(account);
     }
 
     // Define a function 'renounceFarmer' to renounce this role
-    function renounceFarmer() public {
+    function renounceFarmer() public onlyFarmer {
         _removeFarmer(msg.sender);
     }
 

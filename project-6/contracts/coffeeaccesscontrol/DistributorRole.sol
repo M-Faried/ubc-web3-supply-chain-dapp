@@ -21,7 +21,10 @@ contract DistributorRole {
 
     // Define a modifier that checks to see if msg.sender has the appropriate role
     modifier onlyDistributor() {
-        require(isDistributor(msg.sender));
+        require(
+            isDistributor(msg.sender),
+            "The user is not registered as a distributor."
+        );
         _;
     }
 
@@ -31,12 +34,12 @@ contract DistributorRole {
     }
 
     // Define a function 'addDistributor' that adds this role
-    function addDistributor(address account) public onlyDistributor {
+    function addDistributor(address account) public {
         _addDistributor(account);
     }
 
     // Define a function 'renounceDistributor' to renounce this role
-    function renounceDistributor() public {
+    function renounceDistributor() public onlyDistributor {
         _removeDistributor(msg.sender);
     }
 

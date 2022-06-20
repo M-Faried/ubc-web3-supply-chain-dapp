@@ -21,7 +21,10 @@ contract RetailerRole {
 
     // Define a modifier that checks to see if msg.sender has the appropriate role
     modifier onlyRetailer() {
-        require(isRetailer(msg.sender));
+        require(
+            isRetailer(msg.sender),
+            "The user is not registered as retailer."
+        );
         _;
     }
 
@@ -31,12 +34,12 @@ contract RetailerRole {
     }
 
     // Define a function 'addRetailer' that adds this role
-    function addRetailer(address account) public onlyRetailer {
+    function addRetailer(address account) public {
         _addRetailer(account);
     }
 
     // Define a function 'renounceRetailer' to renounce this role
-    function renounceRetailer() public {
+    function renounceRetailer() public onlyRetailer {
         _removeRetailer(msg.sender);
     }
 
