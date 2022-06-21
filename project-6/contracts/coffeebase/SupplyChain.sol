@@ -22,7 +22,7 @@ contract SupplyChain is
     uint256 sku;
 
     // Define a public mapping 'items' that maps the UPC to an Item.
-    mapping(uint256 => Item) items;
+    mapping(uint256 => Item) private items;
 
     // Define a public mapping 'itemsHistory' that maps the UPC to an array of TxHash,
     // that track its journey through the supply chain -- to be sent from DApp.
