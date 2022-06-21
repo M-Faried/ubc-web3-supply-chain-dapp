@@ -110,6 +110,3 @@ See also the list of [contributors](https://github.com/your/project/contributors
 * Ganache-cli
 * Truffle
 * IPFS
-
-## Used Packages
-* truffle-hdwallet-provider Used to migrate contracts on ropsten test network.
