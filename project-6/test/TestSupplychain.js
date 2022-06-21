@@ -56,11 +56,10 @@ contract('SupplyChain', function (accounts) {
         const supplyChain = await SupplyChain.deployed()
 
         // Declare and Initialize a variable for event
-        // var eventEmitted = false
-        // let event = supplyChain.Harvested();        
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        var eventEmitted = false
+        supplyChain.Harvested(null, (err, res) => {
+            eventEmitted = true
+        });
 
         // Mark an item as Harvested by calling function harvestItem()
         await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes);
@@ -79,20 +78,19 @@ contract('SupplyChain', function (accounts) {
         assert.equal(resultBufferOne[6], originFarmLatitude, 'Error: Missing or Invalid originFarmLatitude')
         assert.equal(resultBufferOne[7], originFarmLongitude, 'Error: Missing or Invalid originFarmLongitude')
         assert.equal(resultBufferTwo[5], 0, 'Error: Invalid item State')
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 2nd Test
     it("Testing smart contract function processItem() that allows a farmer to process coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false        
-        //// Watch the emitted event Processed()
-        // let event = supplyChain.Processed();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Processed()
+        supplyChain.Processed(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Processed by calling function processtItem()
         await supplyChain.processItem(upc, { from: originFarmerID });
@@ -105,20 +103,19 @@ contract('SupplyChain', function (accounts) {
         assert.equal(resultBufferOne[2], originFarmerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferOne[3], originFarmerID, 'Error: Missing or Invalid originFarmerID')
         assert.equal(resultBufferTwo[5], 1, 'Error: Invalid item State')
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 3rd Test
     it("Testing smart contract function packItem() that allows a farmer to pack coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event Packed()
-        // let event = supplyChain.Packed();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Packed()
+        supplyChain.Packed(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Packed by calling function packItem()
         await supplyChain.packItem(upc, { from: originFarmerID });
@@ -130,19 +127,19 @@ contract('SupplyChain', function (accounts) {
         // Verify the result set
         assert.equal(resultBufferOne.ownerID, originFarmerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferTwo.itemState, 2, 'Error: Invalid item State')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 4th Test
     it("Testing smart contract function sellItem() that allows a farmer to sell coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event ForSale()
-        // let event = supplyChain.ForSale();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event ForSale()
+        supplyChain.ForSale(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as ForSale by calling function sellItem()
         await supplyChain.sellItem(upc, productPrice, { from: originFarmerID });
@@ -154,21 +151,20 @@ contract('SupplyChain', function (accounts) {
         // Verify the result set
         assert.equal(resultBufferOne.ownerID, originFarmerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferTwo.itemState, 3, 'Error: Invalid item State')
-        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly");
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly")
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 5th Test
     it("Testing smart contract function buyItem() that allows a distributor to buy coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event Sold()
-        // let event = supplyChain.Sold();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Sold()
+        supplyChain.Sold(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Sold by calling function buyItem()
         await supplyChain.buyItem(upc, { from: distributorID, value: productPrice });
@@ -179,24 +175,22 @@ contract('SupplyChain', function (accounts) {
 
         // Verify the result set
         assert.equal(resultBufferOne.ownerID, distributorID, 'Error: Missing or Invalid ownerID')
-        assert.equal(resultBufferTwo.distributorID, distributorID, "Error: The distributor ID is not set correctly");
+        assert.equal(resultBufferTwo.distributorID, distributorID, "Error: The distributor ID is not set correctly")
         assert.equal(resultBufferTwo.itemState, 4, 'Error: Invalid item State')
-        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly");
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')        
+        assert.equal(resultBufferTwo.productPrice, productPrice, "Error: The item price wasn't set correctly")
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 6th Test
     it("Testing smart contract function shipItem() that allows a distributor to ship coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event Shipped()
-        // let event = supplyChain.Sold();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
-
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Shipped()
+        supplyChain.Sold(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Sold by calling function shipItem()        
         await supplyChain.shipItem(upc, { from: originFarmerID });
@@ -207,23 +201,21 @@ contract('SupplyChain', function (accounts) {
 
         // Verify the result set
         assert.equal(resultBufferOne.ownerID, distributorID, 'Error: Missing or Invalid ownerID')
-        assert.equal(resultBufferTwo.distributorID, distributorID, "Error: The distributor ID should not be changed");
+        assert.equal(resultBufferTwo.distributorID, distributorID, "Error: The distributor ID should not be changed")
         assert.equal(resultBufferTwo.itemState, 5, 'Error: Invalid item State')
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 7th Test
     it("Testing smart contract function receiveItem() that allows a retailer to mark coffee received", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event Received()
-        // let event = supplyChain.Received();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
-
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Received()
+        supplyChain.Received(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Sold by calling function buyItem()
         await supplyChain.receiveItem(upc, { from: retailerID });
@@ -236,20 +228,19 @@ contract('SupplyChain', function (accounts) {
         assert.equal(resultBufferOne.ownerID, retailerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferTwo.retailerID, retailerID, "Error: The retailer ID is not set correctly")
         assert.equal(resultBufferTwo.itemState, 6, 'Error: Invalid item State')
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 8th Test
     it("Testing smart contract function purchaseItem() that allows a consumer to purchase coffee", async () => {
         const supplyChain = await SupplyChain.deployed()
 
-        //// Declare and Initialize a variable for event
-        // var eventEmitted = false
-        //// Watch the emitted event Purchased()
-        // let event = supplyChain.Purchased();
-        // await event.watch((err, res) => {
-        //     eventEmitted = true
-        // })
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+        // Watch the emitted event Purchased()
+        supplyChain.Purchased(null, () => {
+            eventEmitted = true
+        });
 
         // Mark an item as Sold by calling function purchaseItem()
         await supplyChain.purchaseItem(upc, { from: consumerID });
@@ -263,7 +254,7 @@ contract('SupplyChain', function (accounts) {
         assert.equal(resultBufferOne.ownerID, consumerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferTwo.consumerID, consumerID, "Error: The consumer ID is not set correctly")
         assert.equal(resultBufferTwo.itemState, 7, 'Error: Invalid item State')
-        // assert.equal(eventEmitted, true, 'Invalid event emitted')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })
 
     // 9th Test
