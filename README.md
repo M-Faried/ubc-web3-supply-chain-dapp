@@ -2,7 +2,7 @@
 
 This repository containts an Ethereum DApp that demonstrates a Supply Chain flow between a Seller and Buyer. The user story is similar to any commonly used supply chain process. A Seller can add items to the inventory system stored in the blockchain. A Buyer can purchase such items from the inventory system. Additionally a Seller can mark an item as Shipped, and similarly a Buyer can mark an item as Received.
 
-The DApp User Interface when running should look like...
+The DApp User Interface when running looks like...
 
 ![truffle test](images/ftc_product_overview.png)
 
@@ -15,7 +15,7 @@ The DApp User Interface when running should look like...
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -34,13 +34,13 @@ A step by step series of examples that tell you have to get a development env ru
 Clone this repository:
 
 ```
-git clone https://github.com/udacity/nd1309/tree/master/course-5/project-6
+git clone https://github.com/M-Faried/ubc-web3-supply-chain-dapp.git
 ```
 
 Change directory to ```project-6``` folder and install all requisite npm packages (as listed in ```package.json```):
 
 ```
-cd project-6
+cd project-folder
 npm install
 ```
 
